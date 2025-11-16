@@ -1,769 +1,491 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+<!-- =========================================
+     COMPLETE MENU PAGE: NAVBAR / HERO / GRID
+     + FEATURES, SUBSCRIBE, CONTACT, FOOTER
+     ========================================= -->
 
 <style>
-/* ----------------------------- */
-/* 🌈 GLOBAL PAGE STYLING        */
-/* ----------------------------- */
-
-body {
-  background: linear-gradient(120deg, #fdfbfb, #ebedee);
-  animation: bgmove 12s infinite alternate ease-in-out;
-  background-size: 150% 150%;
-  transition: background 0.4s ease;
+:root{
+  --accent1: #6a11cb;
+  --accent2: #2575fc;
+  --muted: #6b7280;
+  --glass: rgba(255,255,255,0.78);
+  --glass-dark: rgba(18,18,20,0.8);
+  --radius: 12px;
 }
 
-@keyframes bgmove {
-  0% { background-position: 0% 30%; }
-  100% { background-position: 100% 70%; }
+/* ---------- BASE ---------- */
+*{box-sizing:border-box}
+body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; -webkit-font-smoothing:antialiased; background: linear-gradient(135deg,#f3f7ff 0%, #fff9f6 100%); color:#0b1220;}
+a { text-decoration:none; color:inherit; }
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:14px 18px; background:transparent; position:sticky; top:0; z-index:1100;
 }
+.brand { font-weight:900; font-size:1.1rem; letter-spacing:-0.3px; display:flex; align-items:center; gap:10px; }
+.brand .logo { width:36px; height:36px; border-radius:8px; display:inline-grid; place-items:center; font-weight:900; color:white; background:linear-gradient(135deg,var(--accent1),var(--accent2)); }
+.nav-actions { display:flex; gap:8px; align-items:center; }
 
-/* Dark mode override */
-html[data-bs-theme="dark"] body {
-  background: radial-gradient(circle at top, #25274d, #141414);
+/* theme toggle */
+.theme-toggle { border: none; background: transparent; padding:8px; border-radius:8px; cursor:pointer; }
+.search-short { border-radius:10px; border:1px solid rgba(10,10,20,0.06); padding:8px 10px; width:220px; }
+
+/* ---------- HERO ---------- */
+.hero {
+  display:flex; gap:20px; align-items:center; justify-content:space-between; padding:28px 18px;
 }
+.hero-left { max-width:720px; }
+.hero h1 { margin:0; font-size:2rem; line-height:1.02; font-weight:900; }
+.hero p { margin:10px 0 0 0; color:var(--muted); }
 
-/* ----------------------------- */
-/* 🔝 HEADER & CART BUTTON       */
-/* ----------------------------- */
+/* CTA */
+.hero-cta { display:flex; gap:8px; margin-top:16px; }
+.btn-primary { background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; padding:10px 16px; border-radius:10px; border:none; font-weight:800; box-shadow:0 10px 30px rgba(37,117,252,0.12); cursor:pointer; }
+.btn-outline { border-radius:10px; padding:10px 14px; border:1px solid rgba(0,0,0,0.06); background:white; cursor:pointer; }
 
-h2.fw-bold {
-  font-weight: 800;
-}
+/* Hero image */
+.hero-visual { width:380px; border-radius:18px; overflow:hidden; box-shadow:0 30px 80px rgba(14,20,40,0.08); }
+.hero-visual img{ display:block; width:100%; height:100%; object-fit:cover; }
 
-#cartButton {
-  border-width: 2px;
-  font-weight: 600;
-  border-radius: 999px;
-  transition: 0.3s ease;
-}
+/* ---------- TOP FILTERS CARD ---------- */
+.filter-card { margin:12px 18px; padding:12px; border-radius:14px; background:var(--glass); display:flex; gap:12px; align-items:center; flex-wrap:wrap; border:1px solid rgba(20,30,60,0.03); box-shadow:0 10px 30px rgba(12,20,40,0.03); }
+.filter-card .search-input{ flex:1; min-width:160px; padding:10px 12px; border-radius:10px; border:1px solid rgba(0,0,0,0.05); }
+.chips { display:flex; gap:8px; flex-wrap:wrap; }
 
-#cartButton:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
-}
+/* chip */
+.chip { padding:7px 12px; border-radius:999px; border:none; background:#ffffffc8; cursor:pointer; font-weight:700; transition:all .22s; box-shadow:0 6px 18px rgba(12,20,40,0.04); }
+.chip.active { background: linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; transform:translateY(-4px); box-shadow:0 14px 42px rgba(37,117,252,0.14); }
 
-/* ----------------------------- */
-/* 🔍 FILTER BAR + ANIMATION     */
-/* ----------------------------- */
+/* ---------- GRID ---------- */
+.container { padding:18px; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+@media(max-width:992px){ .grid{ grid-template-columns:repeat(2,1fr);} }
+@media(max-width:600px){ .grid{ grid-template-columns:1fr; } }
 
-.animated-filter {
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 18px;
-  padding: 14px 14px 10px 14px;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
-  animation: slideDown 0.6s ease-out;
-  border: 1px solid rgba(0,0,0,0.04);
-}
+/* card */
+.card-item{ border-radius:14px; overflow:hidden; background:white; box-shadow:0 12px 36px rgba(12,20,40,0.06); transition:transform .28s, box-shadow .28s; position:relative; }
+.card-item:hover{ transform:translateY(-8px); box-shadow:0 20px 60px rgba(12,20,40,0.12); }
+.card-item img.media{ width:100%; height:180px; object-fit:cover; transition:transform .6s; }
+.card-item:hover img.media{ transform:scale(1.05); }
+.card-body{ padding:12px 14px; display:flex; flex-direction:column; gap:8px; min-height:150px; }
+.card-title{ display:flex; justify-content:space-between; align-items:center; gap:8px; font-weight:800; }
+.card-desc{ color:var(--muted); font-size:0.95rem; flex:1; }
 
-html[data-bs-theme="dark"] .animated-filter {
-  background: rgba(20, 20, 20, 0.9);
-  border-color: rgba(255,255,255,0.06);
-}
+/* overlay badge */
+.badge-cat { position:absolute; left:12px; top:12px; padding:6px 10px; border-radius:999px; background:linear-gradient(90deg, rgba(0,0,0,0.28), rgba(0,0,0,0.14)); color:white; font-weight:700; }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* price & actions */
+.price { font-weight:900; font-size:1.05rem; }
+.actions { display:flex; gap:8px; align-items:center; }
 
-.animated-filter input,
-.animated-filter select {
-  border: 2px solid #d1d1d1 !important;
-  border-radius: 10px;
-  transition: 0.3s;
-}
+/* wishlist */
+.wishlist { border:none; background:transparent; font-size:1.1rem; cursor:pointer; color:#e74c3c; }
+.wishlist.liked { transform:scale(1.08); text-shadow:0 8px 18px rgba(231,76,60,0.14); }
 
-.animated-filter input:focus,
-.animated-filter select:focus {
-  border-color: #4c79ff !important;
-  box-shadow: 0 0 10px rgba(76, 121, 255, 0.3);
-}
+/* load more wrapper */
+.load-more-wrap{ text-align:center; margin:18px 0; }
 
-/* ----------------------------- */
-/* 🧷 CATEGORY CHIPS (STYLE A)   */
-/* ----------------------------- */
+/* ---------- FEATURES ROW ---------- */
+.features { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:30px 18px; }
+.feature { padding:18px; border-radius:14px; background:#fff; box-shadow:0 10px 30px rgba(12,20,40,0.04); text-align:center; }
+.feature h4{ margin:8px 0; font-size:1.05rem; }
+.feature p{ color:var(--muted); font-size:0.94rem; }
 
-.category-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-}
+/* ---------- SUBSCRIBE ---------- */
+.subscribe { margin:26px 18px; padding:16px; border-radius:14px; display:flex; gap:12px; align-items:center; background:linear-gradient(180deg,#fff,#fbfbff); border:1px solid rgba(0,0,0,0.03); }
+.subscribe input { padding:10px 12px; border-radius:10px; border:1px solid rgba(10,10,20,0.06); flex:1; }
 
-.category-chips .chip {
-  border: none;
-  outline: none;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  background: #f3f4ff;
-  color: #3a3a6a;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-  transition: 0.25s ease;
-}
+/* ---------- CONTACT QUICK (modal-lite) ---------- */
+.contact-quick { position:fixed; right:18px; bottom:90px; z-index:1200; display:flex; gap:8px; flex-direction:column; }
+.contact-btn { background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; border:none; padding:10px 12px; border-radius:12px; cursor:pointer; box-shadow:0 10px 30px rgba(37,117,252,0.12); }
 
-.category-chips .chip span.emoji {
-  font-size: 1.1rem;
-}
+/* ---------- FOOTER ---------- */
+.footer { margin-top:32px; padding:24px 18px; background:linear-gradient(180deg,#f8f8ff, #ffffff); border-top:1px solid rgba(10,10,20,0.04); display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+.footer .left { color:var(--muted); }
+.footer .right { display:flex; gap:12px; align-items:center; }
 
-.category-chips .chip:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(0,0,0,0.16);
-}
+/* powered by nani */
+.powered { font-weight:700; display:flex; gap:8px; align-items:center; }
+.powered .nani { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:white; }
 
-.category-chips .chip.active {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  color: #ffffff;
-}
+/* small links */
+.footer a.small-link { color:var(--muted); font-size:0.95rem; }
 
-html[data-bs-theme="dark"] .category-chips .chip {
-  background: #25274d;
-  color: #f5f5f5;
-}
+/* back-to-top */
+#backToTop { position:fixed; right:18px; bottom:18px; z-index:1400; display:none; border:none; background:rgba(10,10,20,0.9); color:white; padding:10px; border-radius:999px; cursor:pointer; }
 
-/* ----------------------------- */
-/* ⭐ RECOMMENDED SECTION        */
-/* ----------------------------- */
+/* modal details big */
+.modal-bg { position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:2000; background:rgba(10,12,18,0.5); }
+.modal-card { width:min(920px,94%); background:white; border-radius:12px; display:grid; grid-template-columns:1fr 1fr; overflow:hidden; box-shadow:0 40px 120px rgba(2,6,23,0.6); }
+.modal-card img{ width:100%; height:100%; object-fit:cover; }
+.modal-body{ padding:18px; }
 
-#recommended-section {
-  margin-bottom: 22px;
-  animation: slideUp 0.6s ease-out;
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.recommended-row {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 12px;
-  padding-bottom: 6px;
-}
-
-.recommended-row::-webkit-scrollbar {
-  height: 6px;
-}
-.recommended-row::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.2);
-  border-radius: 999px;
-}
-
-/* Small recommended cards */
-.recommended-card {
-  min-width: 220px;
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.14);
-  border: none;
-}
-.recommended-card img {
-  height: 120px;
-  object-fit: cover;
-}
-
-/* ----------------------------- */
-/* 🍽 MENU CARD STYLING          */
-/* ----------------------------- */
-
-.card.menu-card {
-  border: none !important;
-  border-radius: 15px;
-  overflow: hidden;
-  background: #ffffff;
-  box-shadow: 0px 6px 18px rgba(0,0,0,0.12);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-}
-
-.card.menu-card::before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  left: -5px;
-  right: -5px;
-  bottom: -5px;
-  border-radius: 20px;
-  background: linear-gradient(45deg, #ffecd2, #fcb69f, #c2e9fb, #a1c4fd);
-  z-index: -1;
-  opacity: 0;
-  transition: 0.4s ease;
-}
-
-.card.menu-card:hover::before {
-  opacity: 1;
-}
-
-.card.menu-card .card-img-top {
-  transition: transform 0.4s ease;
-}
-
-.card.menu-card:hover .card-img-top {
-  transform: scale(1.05);
-}
-
-.card.menu-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0px 12px 25px rgba(0,0,0,0.18);
-}
-
-html[data-bs-theme="dark"] .card.menu-card {
-  background: #1e1e1e;
-  box-shadow: 0px 6px 20px rgba(0,0,0,0.6);
-}
-
-/* Rating stars */
-.text-warning,
-.text-muted {
-  font-size: 17px;
-}
-
-/* Price */
-.fw-bold {
-  font-size: 1.1rem;
-  color: #2b2b2b;
-}
-html[data-bs-theme="dark"] .fw-bold {
-  color: #f0f0f0;
-}
-
-/* Buttons */
-.btn-success {
-  transition: 0.3s ease;
-  font-weight: 600;
-  border-radius: 8px;
-}
-
-.btn-success:hover {
-  transform: scale(1.1);
-  background-color: #1e9c53;
-}
-
-.btn-outline-danger {
-  transition: 0.3s ease;
-  border-radius: 8px;
-}
-
-.btn-outline-danger:hover {
-  transform: scale(1.08);
-}
-
-/* ----------------------------- */
-/* 💀 SKELETON LOADING           */
-/* ----------------------------- */
-
-.skeleton-grid {
-  display: none;
-}
-
-body:not(.menu-loaded) .skeleton-grid {
-  display: flex;
-}
-
-body:not(.menu-loaded) .real-grid {
-  display: none;
-}
-
-.skeleton-card {
-  border-radius: 15px;
-  overflow: hidden;
-  background: #ffffff;
-  box-shadow: 0px 6px 18px rgba(0,0,0,0.10);
-  padding-bottom: 14px;
-}
-
-.skeleton-img {
-  height: 180px;
-  background: #e0e0e0;
-}
-
-.skeleton-line {
-  height: 12px;
-  border-radius: 999px;
-  background: #e0e0e0;
-}
-
-.shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.shimmer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(
-    120deg,
-    rgba(255,255,255,0.1),
-    rgba(255,255,255,0.5),
-    rgba(255,255,255,0.1)
-  );
-  animation: shimmer 1.4s infinite;
-}
-
-@keyframes shimmer {
-  0%   { left: -150%; }
-  100% { left: 150%; }
-}
-
-/* ----------------------------- */
-/* 🔔 TOAST (Add to cart)       */
-/* ----------------------------- */
-
-.cart-toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #222;
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-  opacity: 0;
-  transform: translateY(10px);
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 9999;
-}
-.cart-toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-html[data-bs-theme="dark"] .cart-toast {
-  background: #fafafa;
-  color: #111;
-}
-
-/* ----------------------------- */
-/* 📱 RESPONSIVE                */
-/* ----------------------------- */
-
-@media (max-width: 768px) {
-  h2.fw-bold {
-    font-size: 1.6rem !important;
-  }
-
-  .card-img-top {
-    height: 180px !important;
-  }
-
-  .animated-filter {
-    padding: 12px;
-  }
-
-  .d-flex.justify-content-between {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-}
-
-@media (max-width: 480px) {
-  .card-img-top {
-    height: 150px !important;
-  }
-
-  .fw-bold {
-    font-size: 1rem;
-  }
-
-  #cartButton {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* ----------------------------- */
-/* 🔻 FOOTER                    */
-/* ----------------------------- */
-
-.custom-footer {
-  margin-top: 40px;
-  padding-top: 18px;
-  padding-bottom: 12px;
-  border-top: 1px solid rgba(0,0,0,0.06);
-  font-size: 0.9rem;
-  color: #555;
-  animation: slideUp 0.7s ease-out;
-}
-
-.custom-footer a {
-  text-decoration: none;
-  font-weight: 600;
-}
-
-html[data-bs-theme="dark"] .custom-footer {
-  border-color: rgba(255,255,255,0.16);
-  color: #e0e0e0;
-}
-
+/* small responsive adjustments */
+@media(max-width:880px){ .hero{flex-direction:column-reverse; gap:14px;} .hero-visual{width:100%} .modal-card{ grid-template-columns:1fr } .features{ grid-template-columns:1fr } }
 </style>
 
-
-
-<!-- ======================= -->
-<!--        HEADER           -->
-<!-- ======================= -->
-
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 class="fw-bold">Menu</h2>
-  <div>
-    <a href="{% url 'cart_view' %}" class="btn btn-outline-primary d-inline-flex align-items-center gap-1" id="cartButton">
-      🛒 Cart 
-      <span class="badge bg-secondary">{{ cart_count }}</span> 
-      (₹{{ cart_total }})
-    </a>
-  </div>
-</div>
-
-
-
-<!-- ======================= -->
-<!--  FILTERS + CATEGORY     -->
-<!-- ======================= -->
-
-<form method="get" class="row g-3 mb-4 animated-filter" id="filterForm">
-
-  <!-- Search -->
-  <div class="col-md-4">
-    <input 
-      type="text" 
-      name="q" 
-      value="{{ request.GET.q }}" 
-      class="form-control" 
-      placeholder="Search items..."
-    >
-  </div>
-
-  <!-- Available Only Checkbox -->
-  <div class="col-md-3 d-flex align-items-center">
-    <div class="form-check">
-      <input 
-        class="form-check-input"
-        type="checkbox"
-        name="available_only"
-        id="available_only"
-        value="on"
-        {% if request.GET.available_only == "on" %} checked {% endif %}
-      >
-      <label class="form-check-label" for="available_only">Available only</label>
+<!-- ========== NAVBAR ========== -->
+<header class="navbar" role="banner" aria-label="Top Navigation">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">SN</div>
+    <div>
+      <div style="font-size:0.86rem;color:var(--muted)">Smart</div>
+      <div style="font-weight:900;">Canteen</div>
     </div>
   </div>
 
-  <!-- Filter Button -->
-  <div class="col-md-2">
-    <button class="btn btn-primary w-100" type="submit">Filter</button>
+  <div class="nav-actions" role="navigation">
+    <input id="miniSearch" class="search-short" placeholder="Search..." aria-label="Quick search">
+    <button id="themeToggle" class="theme-toggle" title="Toggle theme" aria-pressed="false">🌓</button>
+    <a href="{% url 'cart_view' %}" class="btn-outline" aria-label="Cart">🛒 <span style="margin-left:6px;">{{ cart_count }} (₹{{ cart_total }})</span></a>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero" role="region" aria-label="Hero">
+  <div class="hero-left">
+    <h1>Fresh food, fast — delivered on campus</h1>
+    <p>Browse the menu, add to your cart, and enjoy tasty meals prepared daily. Try our chef-recommended items or filter by category.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('miniSearch').focus()">Explore Menu</button>
+      <a class="btn-outline" href="{% url 'register' %}">Create account</a>
+    </div>
+    <div style="margin-top:12px; color:var(--muted); font-size:0.95rem;">Open: Mon–Sat • 8:00AM–8:00PM • Fast pickup & delivery</div>
   </div>
 
-  <!-- Hidden category input (controlled by chips) -->
-  <input type="hidden" name="category" id="categoryInput" value="{{ selected_category }}">
+  <div class="hero-visual" aria-hidden="true">
+    <img src="https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?cs=srgb&dl=pexels-ash-craig-122861-376464.jpg&fm=jpg" alt="Hero food" />
+  </div>
+</section>
 
-  <!-- Category Chips -->
-  <div class="col-12 mt-1">
-    <div class="category-chips">
-      <!-- All chip -->
-      <button type="button" class="chip {% if not selected_category %}active{% endif %}" data-value="">
-        <span class="emoji">✨</span> All
-      </button>
+<!-- ========== FILTER CARD (search + chips) ========== -->
+<form id="filterForm" class="filter-card" method="get" role="search" aria-label="Filter Menu">
+  <input id="searchInput" class="search-input" name="q" type="search" placeholder="Search items, e.g., 'biriyani'..." value="{{ request.GET.q|default:'' }}" aria-label="Search menu items">
+  <div style="display:flex; gap:10px; align-items:center;">
+    <label style="display:flex; gap:8px; align-items:center; font-weight:700; color:var(--muted);">
+      <input type="checkbox" name="available_only" value="on" {% if request.GET.available_only == "on" %}checked{% endif %}>
+      Available only
+    </label>
+    <button type="submit" class="btn-outline">Filter</button>
+  </div>
 
+  <input id="categoryInput" type="hidden" name="category" value="{{ selected_category|default:'' }}">
+
+  <div style="flex-basis:100%; margin-top:10px;">
+    <div class="chips" role="tablist" aria-label="Categories">
+      <button type="button" class="chip {% if not selected_category %}active{% endif %}" data-value="">All</button>
       {% for cat in categories %}
-      <button 
-        type="button" 
-        class="chip {% if cat == selected_category %}active{% endif %}" 
-        data-value="{{ cat }}"
-      >
-        <span class="emoji">
-          {% if cat == "Breakfast" %}🍳
-          {% elif cat == "Beverage" %}☕
-          {% elif cat == "Meal" %}🍛
-          {% elif cat == "Non-Veg" %}🍗
-          {% else %}🍽️
-          {% endif %}
-        </span>
-        {{ cat }}
-      </button>
+        <button type="button" class="chip {% if cat == selected_category %}active{% endif %}" data-value="{{ cat }}">{{ cat }}</button>
       {% endfor %}
     </div>
   </div>
-
 </form>
 
+<!-- ========== FEATURES ROW ========== -->
+<section class="features" aria-label="Features">
+  <div class="feature">
+    <div style="font-size:1.6rem;">🚀</div>
+    <h4>Fast Pickup</h4>
+    <p>Orders ready within 15 minutes for on-campus pickup.</p>
+  </div>
+  <div class="feature">
+    <div style="font-size:1.6rem;">🥗</div>
+    <h4>Healthy Options</h4>
+    <p>Vegetarian & gluten-free choices clearly marked.</p>
+  </div>
+  <div class="feature">
+    <div style="font-size:1.6rem;">⭐</div>
+    <h4>Chef's Picks</h4>
+    <p>Curated recommendations based on popularity and ratings.</p>
+  </div>
+</section>
 
-
-<!-- ======================= -->
-<!--   RECOMMENDED SECTION   -->
-<!-- ======================= -->
-
-<div id="recommended-section">
-  <h5 class="fw-bold mb-2">Recommended for you ⭐</h5>
-  <div class="recommended-row">
+<!-- ========== MENU GRID ========== -->
+<main class="container" role="main">
+  <div id="grid" class="grid" aria-live="polite">
     {% for item in items %}
-      {% if item.rating >= 4 %}
-      <div class="card recommended-card">
-        {% if item.image %}
-          <img src="{{ item.image.url }}" class="card-img-top">
-        {% else %}
-          <img src="https://via.placeholder.com/300x200.png?text=No+Image" class="card-img-top">
-        {% endif %}
-        <div class="card-body py-2">
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="fw-bold small">{{ item.name }}</span>
-            <span class="badge bg-warning text-dark">★ {{ item.rating }}</span>
-          </div>
-          <small class="text-muted">{{ item.category }}</small><br>
-          <small class="fw-bold">₹{{ item.price }}</small>
+      <article class="card-item" tabindex="0" data-id="{{ item.id }}" aria-labelledby="item-title-{{ item.id }}">
+        <div style="position:relative;">
+          {% if item.image %}
+            <img class="media" src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy">
+          {% else %}
+            <img class="media" src="https://via.placeholder.com/800x600?text=No+Image" alt="{{ item.name }}" loading="lazy">
+          {% endif %}
+          <div class="badge-cat">{{ item.category }}</div>
         </div>
-      </div>
-      {% endif %}
+        <div class="card-body">
+          <div class="card-title">
+            <span id="item-title-{{ item.id }}">{{ item.name }}</span>
+            <span class="stars">★{{ item.rating|default:0 }}</span>
+          </div>
+          <p class="card-desc">{{ item.description|truncatechars:120|default:"Tasty & fresh" }}</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="price">₹{{ item.price }}</div>
+            <div class="actions">
+              {% if item.available %}
+                <a href="{% url 'add_to_cart' item.id %}" class="add-btn btn-primary" style="padding:8px 10px; border-radius:8px; color:white;">Add</a>
+              {% else %}
+                <span class="badge bg-secondary">Not available</span>
+              {% endif %}
+              <button class="wishlist" data-id="{{ item.id }}" title="Save to wishlist" aria-pressed="false">♡</button>
+            </div>
+          </div>
+        </div>
+      </article>
+    {% empty %}
+      <p>No items found.</p>
     {% endfor %}
   </div>
-</div>
 
+  <div class="load-more-wrap">
+    <button id="loadMoreBtn" class="btn-outline" style="display:none;">Load more</button>
+  </div>
+</main>
 
+<!-- ========== SUBSCRIBE / CONTACT / QUICK CTA ========== -->
+<section class="subscribe" aria-label="Subscribe">
+  <div style="flex:1;">
+    <strong>Subscribe</strong> to our weekly menu & offers
+    <div style="margin-top:8px;">
+      <input id="subscribeEmail" placeholder="Your email address" aria-label="Email for subscribe">
+    </div>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button id="subscribeBtn" class="btn-primary">Subscribe</button>
+    <button id="contactOpen" class="btn-outline">Contact</button>
+  </div>
+</section>
 
-<!-- ======================= -->
-<!--   SKELETON PLACEHOLDERS -->
-<!-- ======================= -->
-
-<div class="row skeleton-grid">
-  {% for i in "123" %}
-  <div class="col-md-4 mb-3">
-    <div class="skeleton-card">
-      <div class="skeleton-img shimmer"></div>
-      <div class="card-body">
-        <div class="skeleton-line w-75 shimmer mt-3"></div>
-        <div class="skeleton-line w-50 shimmer mt-3"></div>
-        <div class="skeleton-line w-100 shimmer mt-3"></div>
+<!-- ========== CONTACT QUICK MODAL ========== -->
+<div id="contactModal" class="modal-bg" role="dialog" aria-hidden="true">
+  <div class="modal-card" role="document">
+    <div style="padding:18px;">
+      <h3>Contact Us</h3>
+      <p style="color:var(--muted)">Have a question? Message us and we'll reply within business hours.</p>
+      <form id="contactForm">
+        <div style="display:flex; gap:8px; margin-top:8px;"><input id="contactName" placeholder="Your name" required style="flex:1; padding:10px; border-radius:8px;"><input id="contactEmail" placeholder="Email" required style="flex:1; padding:10px; border-radius:8px;"></div>
+        <textarea id="contactMsg" rows="4" placeholder="Message" style="width:100%; margin-top:8px; padding:10px; border-radius:8px;"></textarea>
+        <div style="text-align:right; margin-top:8px;"><button type="submit" class="btn-primary">Send</button></div>
+      </form>
+    </div>
+    <div style="background:linear-gradient(180deg,#f7f7ff,#eef6ff); padding:18px; display:flex; align-items:center; justify-content:center;">
+      <div style="text-align:center; max-width:260px;">
+        <h4 style="margin:0 0 8px 0;">Quick support</h4>
+        <p style="color:var(--muted); font-size:0.95rem;">Or email us at <a href="mailto:hello@example.com">hello@example.com</a></p>
       </div>
     </div>
   </div>
-  {% endfor %}
 </div>
 
+<!-- ========== TOAST + BACK TO TOP + CONTACT QUICK BUTTON ========== -->
+<div class="contact-quick" aria-hidden="false">
+  <button id="contactQuickBtn" class="contact-btn" title="Contact">💬 Contact</button>
+</div>
 
+<div id="cartToast" class="cart-toast" role="status" aria-live="polite" style="display:none;">✅ <span id="cartToastText">Added</span></div>
 
-<!-- ======================= -->
-<!--      REAL MENU ITEMS    -->
-<!-- ======================= -->
+<button id="backToTop" aria-label="Back to top">⬆</button>
 
-<div class="row real-grid" id="menuGrid">
-  {% for item in items %}
-  <div class="col-md-4 mb-3 menu-item-col">
-    
-    <div class="card h-100 menu-card">
-
-      <!-- Image -->
-      {% if item.image %}
-        <img src="{{ item.image.url }}" class="card-img-top" style="height:200px; object-fit:cover;">
-      {% else %}
-        <img src="https://via.placeholder.com/300x200.png?text=No+Image" class="card-img-top" style="height:200px; object-fit:cover;">
-      {% endif %}
-
-      <div class="card-body d-flex flex-column">
-
-        <!-- Title -->
-        <h5 class="card-title mt-2 fw-bold">{{ item.name }}</h5>
-
-        <!-- Rating Stars -->
-        <div class="mb-1">
-          {% for i in "12345" %}
-            {% if forloop.counter <= item.rating %}
-              <span class="text-warning">★</span>
-            {% else %}
-              <span class="text-muted">☆</span>
-            {% endif %}
-          {% endfor %}
-        </div>
-
-        <!-- Category -->
-        <p class="card-text text-muted small">{{ item.category }}</p>
-
-        <!-- Description -->
-        <p class="card-text flex-grow-1">{{ item.description|default:"Tasty item" }}</p>
-
-        <!-- Price + Buttons -->
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          
-          <span class="fw-bold">₹{{ item.price }}</span>
-
-          <div>
-
-            {% if item.available %}
-              <a href="{% url 'add_to_cart' item.id %}" class="btn btn-sm btn-success add-to-cart-btn">Add</a>
-            {% else %}
-              <span class="badge bg-secondary">Not Available</span>
-            {% endif %}
-
-            {% if user.is_staff %}
-              <a href="{% url 'toggle_item' item.id %}" class="btn btn-sm btn-outline-danger">Toggle</a>
-            {% endif %}
-
-          </div>
-        </div>
-
+<!-- ========== MODAL DETAILS ========== -->
+<div id="detailModal" class="modal-bg" role="dialog" aria-hidden="true">
+  <div class="modal-card">
+    <img id="detailImg" src="" alt="item image">
+    <div class="modal-body">
+      <button id="detailClose" class="btn-outline" style="float:right;">Close</button>
+      <h3 id="detailTitle"></h3>
+      <p id="detailCat" style="color:var(--muted)"></p>
+      <p id="detailDesc" style="margin-top:8px;"></p>
+      <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
+        <div id="detailPrice" style="font-weight:900; font-size:1.1rem;"></div>
+        <a id="detailAdd" class="btn-primary" href="#">Add to cart</a>
       </div>
     </div>
-
   </div>
-  {% empty %}
-  <p>No items found.</p>
-  {% endfor %}
 </div>
 
-<!-- Load more button -->
-<div class="text-center mt-2" id="loadMoreWrapper" style="display:none;">
-  <button class="btn btn-outline-secondary" id="loadMoreBtn">Load more</button>
-</div>
+<!-- ========== FOOTER ========== -->
+<footer class="footer" role="contentinfo">
+  <div class="left">
+    <div style="font-weight:800;">Smart Canteen</div>
+    <div style="color:var(--muted); margin-top:6px;">Fresh meals on campus • Pickup & delivery • Secure payments</div>
+  </div>
 
+  <div class="right">
+    <div style="display:flex; gap:12px; align-items:center;">
+      <a class="small-link" href="#">Privacy</a>
+      <a class="small-link" href="#">Terms</a>
+      <a class="small-link" href="#">Support</a>
+    </div>
 
-
-<!-- ======================= -->
-<!--         FOOTER          -->
-<!-- ======================= -->
-
-<footer class="custom-footer text-center">
-  <div>© {% now "Y" %} Smart Canteen. All rights reserved.</div>
-  <div>
-    <small>Made with ❤️ for your campus • <a href="#">Privacy</a> • <a href="#">Terms</a></small>
+    <div class="powered" style="margin-left:14px;">
+      <div>Powered by</div>
+      <div class="nani">Nani</div>
+    </div>
   </div>
 </footer>
 
-
-
-<!-- ======================= -->
-<!--         TOAST           -->
-<!-- ======================= -->
-
-<div class="cart-toast" id="cartToast">
-  ✅ Item added to cart
-</div>
-
-
-
-<!-- ======================= -->
-<!--         JS LOGIC        -->
-<!-- ======================= -->
-
+<!-- =========================================
+     JAVASCRIPT: interactions (no backend calls)
+     - search debounce, chips, wishlist UI, modal,
+     - subscribe/contact UI, toast, back-to-top, theme
+     ========================================= -->
 <script>
-// Mark content loaded -> hide skeletons & setup "load more"
-window.addEventListener('load', () => {
-  document.body.classList.add('menu-loaded');
-  setupLoadMore();
+/* ---------- helpers ---------- */
+function qs(sel, root=document){ return root.querySelector(sel) }
+function qsa(sel, root=document){ return Array.from(root.querySelectorAll(sel)) }
+function debounce(fn, wait=350){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait) } }
+
+/* ---------- THEME toggle (localStorage) ---------- */
+const themeToggle = qs('#themeToggle');
+const stored = localStorage.getItem('siteTheme') || 'light';
+if(stored === 'dark') document.documentElement.setAttribute('data-bs-theme','dark'), themeToggle.setAttribute('aria-pressed','true');
+themeToggle.addEventListener('click', ()=>{
+  const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+  if(isDark){ document.documentElement.removeAttribute('data-bs-theme'); themeToggle.setAttribute('aria-pressed','false'); localStorage.setItem('siteTheme','light'); }
+  else { document.documentElement.setAttribute('data-bs-theme','dark'); themeToggle.setAttribute('aria-pressed','true'); localStorage.setItem('siteTheme','dark'); }
 });
 
-// Category chips -> submit form
-const filterForm = document.getElementById('filterForm');
-const categoryInput = document.getElementById('categoryInput');
-const chipButtons = document.querySelectorAll('.category-chips .chip');
+/* ---------- SEARCH debounce (auto-submit after pause) ---------- */
+const searchInput = qs('#searchInput');
+const filterForm = qs('#filterForm') || document.getElementById('filterForm');
+if(searchInput && filterForm){
+  const doSubmit = debounce(()=> filterForm.submit(), 600);
+  searchInput.addEventListener('input', doSubmit);
+}
 
-chipButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    chipButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const value = btn.getAttribute('data-value') || "";
-    categoryInput.value = value;
+/* mini header search */
+const miniSearch = qs('#miniSearch');
+if(miniSearch && searchInput){
+  miniSearch.addEventListener('input', debounce(()=> { searchInput.value = miniSearch.value; filterForm.submit() }, 700));
+}
+
+/* ---------- CHIPS category behavior ---------- */
+const chips = qsa('.chip');
+const categoryInput = qs('#categoryInput');
+chips.forEach(ch => {
+  ch.addEventListener('click', () => {
+    chips.forEach(x=> x.classList.remove('active'));
+    ch.classList.add('active');
+    categoryInput.value = ch.dataset.value || '';
     filterForm.submit();
   });
 });
 
-// Add-to-cart animation
-const cartBtn = document.getElementById('cartButton');
-const addButtons = document.querySelectorAll('.add-to-cart-btn');
-const cartToast = document.getElementById('cartToast');
-
-function showCartToast() {
-  if (!cartToast) return;
-  cartToast.classList.add('show');
-  setTimeout(() => {
-    cartToast.classList.remove('show');
-  }, 1200);
-}
-
-function animateAddToCart(button) {
-  const card = button.closest('.card');
-  if (!card || !cartBtn) return;
-
-  const img = card.querySelector('.card-img-top');
-  if (!img) return;
-
-  const imgRect = img.getBoundingClientRect();
-  const cartRect = cartBtn.getBoundingClientRect();
-
-  const clone = img.cloneNode(true);
-  clone.style.position = 'fixed';
-  clone.style.left = imgRect.left + 'px';
-  clone.style.top = imgRect.top + 'px';
-  clone.style.width = imgRect.width + 'px';
-  clone.style.height = imgRect.height + 'px';
-  clone.style.zIndex = 9999;
-  clone.style.transition = 'all 0.6s ease-out';
-  document.body.appendChild(clone);
-
-  // Force reflow
-  void clone.offsetWidth;
-
-  clone.style.left = cartRect.left + (cartRect.width/2 - imgRect.width/4) + 'px';
-  clone.style.top = cartRect.top + (cartRect.height/2 - imgRect.height/4) + 'px';
-  clone.style.width = imgRect.width / 2 + 'px';
-  clone.style.height = imgRect.height / 2 + 'px';
-  clone.style.opacity = '0.1';
-  clone.style.transform = 'scale(0.5)';
-
-  setTimeout(() => {
-    clone.remove();
-  }, 650);
-}
-
-addButtons.forEach(btn => {
-  btn.addEventListener('click', function(e) {
+/* ---------- WISHLIST (UI-only) ---------- */
+qsa('.wishlist').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
     e.preventDefault();
-    const href = this.getAttribute('href');
-    animateAddToCart(this);
-    showCartToast();
-    setTimeout(() => {
-      window.location.href = href;
-    }, 350);
+    const liked = btn.classList.toggle('liked');
+    btn.textContent = liked ? '❤' : '♡';
+    btn.setAttribute('aria-pressed', liked ? 'true' : 'false');
+    // TODO: POST to backend to persist
   });
 });
 
-// Simple "Load more" behaviour
-function setupLoadMore() {
-  const items = document.querySelectorAll('.menu-item-col');
-  const loadMoreWrapper = document.getElementById('loadMoreWrapper');
-  const loadMoreBtn = document.getElementById('loadMoreBtn');
-  if (!items.length || !loadMoreWrapper || !loadMoreBtn) return;
+/* ---------- DETAIL modal open on card click ---------- */
+const detailModal = qs('#detailModal');
+const detailImg = qs('#detailImg');
+const detailTitle = qs('#detailTitle');
+const detailCat = qs('#detailCat');
+const detailDesc = qs('#detailDesc');
+const detailPrice = qs('#detailPrice');
+const detailAdd = qs('#detailAdd');
+const detailClose = qs('#detailClose');
 
-  let visibleCount = 6;  // items to show first
-  function updateVisible() {
-    items.forEach((el, idx) => {
-      el.style.display = idx < visibleCount ? '' : 'none';
-    });
-    if (visibleCount >= items.length) {
-      loadMoreWrapper.style.display = 'none';
-    } else {
-      loadMoreWrapper.style.display = 'block';
-    }
-  }
-
-  updateVisible();
-
-  loadMoreBtn.addEventListener('click', () => {
-    visibleCount += 6;
-    updateVisible();
+qsa('.card-item').forEach(card=>{
+  card.addEventListener('click', (e)=>{
+    // do not open modal if click target was a button (add/wishlist)
+    if(e.target.closest('a') || e.target.closest('button')) return;
+    const img = card.querySelector('.media');
+    const title = card.querySelector('.card-title span')?.innerText || '';
+    const cat = card.querySelector('.badge-cat')?.innerText || '';
+    const desc = card.querySelector('.card-desc')?.innerText || '';
+    const price = card.querySelector('.price')?.innerText || '';
+    const addHref = card.querySelector('.add-btn')?.href || '#';
+    detailImg.src = img?.src || '';
+    detailTitle.textContent = title;
+    detailCat.textContent = cat;
+    detailDesc.textContent = desc;
+    detailPrice.textContent = price;
+    detailAdd.href = addHref;
+    detailModal.style.display = 'flex';
+    detailModal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
   });
-}
+});
+
+detailClose.addEventListener('click', closeDetail);
+detailModal.addEventListener('click', (e)=>{ if(e.target === detailModal) closeDetail(); });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDetail(); });
+
+function closeDetail(){ detailModal.style.display='none'; detailModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+/* ---------- ADD TO CART toast & follow link ---------- */
+const cartToast = qs('#cartToast');
+const cartToastText = qs('#cartToastText');
+qsa('.add-btn').forEach(btn=>{
+  btn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const name = btn.closest('.card-item').querySelector('.card-title span')?.innerText || 'Item';
+    cartToastText.textContent = `${name} added to cart`;
+    cartToast.style.display = 'flex';
+    cartToast.classList.add('show');
+    setTimeout(()=>{ cartToast.classList.remove('show'); cartToast.style.display='none'; }, 1200);
+    setTimeout(()=>{ window.location = btn.href; }, 350);
+  });
+});
+
+/* ---------- SUBSCRIBE UI ---------- */
+qs('#subscribeBtn').addEventListener('click', ()=>{
+  const email = qs('#subscribeEmail').value || '';
+  if(!email.includes('@')){ alert('Please provide a valid email'); return; }
+  // UI only: show thank you toast
+  cartToastText.textContent = `Thanks — subscribed ${email}`;
+  cartToast.style.display = 'flex'; cartToast.classList.add('show');
+  setTimeout(()=>{ cartToast.classList.remove('show'); cartToast.style.display='none'; }, 1400);
+});
+
+/* ---------- CONTACT quick modal ---------- */
+const contactModal = qs('#contactModal');
+qs('#contactOpen').addEventListener('click', ()=>{ contactModal.style.display='flex'; contactModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; });
+qs('#contactQuickBtn').addEventListener('click', ()=>{ contactModal.style.display='flex'; contactModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; });
+contactModal.addEventListener('click', (e)=>{ if(e.target===contactModal) closeContact(); });
+document.getElementById('contactForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  // UI-only: pretend to send
+  cartToastText.textContent = 'Message sent — we will reply soon';
+  cartToast.style.display = 'flex'; cartToast.classList.add('show');
+  setTimeout(()=>{ cartToast.classList.remove('show'); cartToast.style.display='none'; }, 1400);
+  closeContact();
+});
+function closeContact(){ contactModal.style.display='none'; contactModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+
+/* ---------- BACK TO TOP ---------- */
+const backToTop = qs('#backToTop');
+window.addEventListener('scroll', ()=>{
+  if(window.scrollY > 400) backToTop.style.display = 'block'; else backToTop.style.display = 'none';
+});
+backToTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+/* ---------- LOAD MORE / client-side pagination ---------- */
+const cards = qsa('.card-item');
+let visible = 6;
+const loadBtn = qs('#loadMoreBtn');
+function updateVisible(){ cards.forEach((c,i)=> c.style.display = i < visible ? '' : 'none'); if(cards.length > visible) loadBtn.style.display='inline-block'; else loadBtn.style.display='none'; }
+updateVisible();
+if(loadBtn) loadBtn.addEventListener('click', ()=>{ visible += 6; updateVisible(); });
+
+/* infinite on scroll */
+window.addEventListener('scroll', ()=>{ if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 300){ if(cards.length > visible){ visible += 6; updateVisible(); } } });
+
+/* small entrance animation */
+window.addEventListener('load', ()=>{ qsa('.card-item').forEach((el,i)=>{ el.style.opacity=0; el.style.transform='translateY(8px)'; setTimeout(()=>{ el.style.transition='all .45s cubic-bezier(.2,.9,.2,1)'; el.style.opacity=1; el.style.transform='none'; }, 60 + i*20); }); });
 </script>
 
 {% endblock %}
