@@ -5,15 +5,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'demo-secret-key-change-in-production'
 DEBUG = True
+# Hosts and CSRF trusted origins
 ALLOWED_HOSTS = [
-    'smart-canteen-2.onrender.com',
-    'localhost',
-    '127.0.0.1'
+    "smart-canteen-r1nx.onrender.com",
+    "smart-canteen-2.onrender.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://smart-canteen-r1nx.onrender.com'
+    "https://smart-canteen-r1nx.onrender.com",
+    "https://smart-canteen-2.onrender.com",
 ]
+
+# If behind a proxy (Render), make Django recognize HTTPS
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 
