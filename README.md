@@ -70,8 +70,13 @@ Stock control
 Sales charts
 
 🎯 Real-Time Applications
-
 ✔ College canteens
 ✔ Hostels & PGs
 ✔ Corporate offices
 ✔ Hospital cafeterias
+
+👨‍💻 Author
+KATARAPU THARUN — 𝑫𝒋𝒂𝒏𝒈𝒐 𝑭𝒖𝒍𝒍 𝑺𝒕𝒂𝒄𝒌 𝑫𝒆𝒗𝒆𝒍𝒐𝒑𝒆𝒓
+
+🔗 GitHub: https://github.com/Tharun123-Dev/smart_canteen
+🔗 LinkedIn: https://www.linkedin.com/in/tharun9949/
