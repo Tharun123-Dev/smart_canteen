@@ -36,4 +36,10 @@ urlpatterns = [
     # APIs
     path('api/items/', items_list, name='api_items'),
     path('api/orders/', orders_list, name='api_orders'),
-]
+]   
+
+
+
+
+
+
